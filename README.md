@@ -10,7 +10,7 @@ This repository aims to have all the existing CVEs (obtained from [Trickest Repo
 
 [Apache ActiveMQ OpenWire Protocol - CVE-2023-46604](https://github.com/afonsovitorio/cve_sandbox/tree/main/2023/CVE-2023-46604)
 
-[Ivanti Connect Secure - CVE-2024-21893](https://github.com/afonsovitorio/cve_sandbox/tree/main/2023/CVE-2024-21893)
+[Ivanti Connect Secure - CVE-2024-21893](https://github.com/afonsovitorio/cve_sandbox/tree/main/2024/CVE-2024-21893)
 
 
 
