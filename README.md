@@ -4,6 +4,10 @@ This repository aims to have all the existing CVEs (obtained from [Trickest Repo
 
 ## Functioning sandboxes for Hot CVEs in this repository:
 
+[Jenkins - CVE-2024-23897](https://github.com/afonsovitorio/cve_sandbox/tree/main/2024/CVE-2024-23897)
+
 [Confluence - CVE-2023-22527](https://github.com/afonsovitorio/cve_sandbox/tree/main/2023/CVE-2023-22527)
 
 [Apache ActiveMQ OpenWire Protocol - CVE-2023-46604](https://github.com/afonsovitorio/cve_sandbox/tree/main/2023/CVE-2023-46604)
+
+
