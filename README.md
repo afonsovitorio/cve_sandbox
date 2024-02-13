@@ -5,3 +5,5 @@ This repository aims to have all the existing CVEs (obtained from [Trickest Repo
 ## Functioning sandboxes for Hot CVEs in this repository:
 
 [Confluence - CVE-2023-22527](https://github.com/afonsovitorio/cve_sandbox/tree/main/2023/CVE-2023-22527)
+
+[Confluence - CVE-2023-46604](https://github.com/afonsovitorio/cve_sandbox/tree/main/2023/CVE-2023-46604)
