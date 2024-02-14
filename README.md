@@ -12,6 +12,10 @@ This repository aims to have all the existing CVEs (obtained from [Trickest Repo
 
 [Ivanti Connect Secure - CVE-2024-21893](https://github.com/afonsovitorio/cve_sandbox/tree/main/2024/CVE-2024-21893)
 
+[ownCloud - CVE-2023-49103](https://github.com/afonsovitorio/cve_sandbox/tree/main/2023/CVE-2023-49103)
+
+
+
 
 
 
