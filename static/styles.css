@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    max-width: 30%; /* Make sure the logo doesn't exceed its container's width */
+    height: auto; /* Maintain the aspect ratio of the logo */
+}
+
+.container {
+    margin: 1% 5%;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+.search-container {
+    margin: 1% 20%;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+input {
+    width: 70%;
+    padding: 8px;
+    margin-right: 5px;
+}
+
+button {
+    padding: 1% 12px;
+    background-color: #222831;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+button:hover {
+    background-color: #393E46;
+}
+
+#resultContainer {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: auto;
+    width: 100%;
+}
+
+#latestCveContainer {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.result-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    overflow-x: auto; /* Add horizontal scroll for small screens */
+}
+
+.result-table th, .result-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.result-table th {
+    background-color: #222831;
+    color: white
+}

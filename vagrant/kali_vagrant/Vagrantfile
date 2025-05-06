@@ -1,0 +1,21 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "kalilinux/rolling"
+  
+    config.vm.provider "vmware_desktop" do |vmware|
+      vmware.vmx["memsize"] = "2048"
+      vmware.vmx["numvcpus"] = "2"
+
+    config.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update
+      
+      sudo apt-get install -y tightvncserver
+
+      sudo su -l -c 'printf "vagrant\nvagrant\n\n" | vncpasswd' vagrant
+
+      echo -e '#!/bin/sh\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nstartxfce4 &\n[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources\nxsetroot -solid grey &\nvncconfig -iconic &' > /home/vagrant/.vnc/xstartup
+
+      chmod +x /home/vagrant/.vnc/xstartup
+    SHELL
+    end
+end
+  

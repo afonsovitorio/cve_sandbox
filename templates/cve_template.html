@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVEBox - {{ cve_id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='cve_template_styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icon.ico') }}">
+</head>
+<body>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="col">
+          <h1>{{ cve_id }}</h1>
+        </div>
+        <div class="col text-center">
+            <button type="button" class="btn btn-primary btn-primary" onclick="goBack()">Go back</button>
+        </div>
+      </div>
+      
+
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Description</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="edb-tab" data-bs-toggle="tab" data-bs-target="#edb" type="button" role="tab" aria-controls="profile" aria-selected="false">Exploits on EDB</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="github-tab" data-bs-toggle="tab" data-bs-target="#github" type="button" role="tab" aria-controls="contact" aria-selected="false">Exploits on Github</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="docker-tab" data-bs-toggle="tab" data-bs-target="#docker" type="button" role="tab" aria-controls="contact" aria-selected="false">Vulnerable Docker Images</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="vulhub-tab" data-bs-toggle="tab" data-bs-target="#vulhub" type="button" role="tab" aria-controls="contact" aria-selected="false">Vulhub Entries Found</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="vm-tab" data-bs-toggle="tab" data-bs-target="#vm" type="button" role="tab" aria-controls="contact" aria-selected="false">Virtualization Control</button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <p><strong>Description:</strong> {{ cve_info[1] }}</p>
+            <hr>
+            <p><strong>CVSS Score:</strong> {{ cve_info[2] }}</p>
+            <hr>
+            <p><strong>Severity:</strong> {{ cve_info[3] }}</p>
+            <hr>
+            <p><strong>Technology:</strong> {{ cve_info[4] }}</p>
+            <hr>
+            <p><strong>Vendor:</strong> {{ cve_info[5] }}</p>
+            <hr>
+            <p><strong>EPSS Score:</strong> 
+                {% if cve_info[6] %}
+                    {{ (cve_info[6]*100) | round(2) }}%
+                {% else %}
+                    Not available
+                {% endif %}
+            </p>
+            <hr>
+        </div>
+        <div class="tab-pane fade" id="edb" role="tabpanel" aria-labelledby="edb-tab">
+            {% if exploits_info_edb %}
+                {% for exploit in exploits_info_edb %}
+                <p>
+                    <strong>Exploit ID:</strong> {{ exploit.id }}<br>
+                    <strong>Author:</strong> {{ exploit.author }}<br>
+                    <strong>Description:</strong> {{ exploit.description }}<br>
+                    <strong>Date Published:</strong> {{ exploit.date_published }}<br>
+                    <strong>URL:</strong> <a href="{{ exploit.link }}">{{ exploit.link }}</a><br>
+                    <strong>Download:</strong> <a href="{{"https://www.exploit-db.com/download/" + exploit.id }}">{{"https://www.exploit-db.com/download/" + exploit.id }}</a>
+                </p>
+                <hr>
+                {% endfor %}
+            {% else %}
+                <p>No exploits found for this CVE on EDB.</p>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="github" role="tabpanel" aria-labelledby="github-tab">
+            {% if exploits_info_github %}
+                {% for exploit in exploits_info_github['pocs'] %}
+                <p>
+                    <strong>Repository Name:</strong> {{exploit.name}}<br>
+                    <strong>Author:</strong> {{exploit.owner}}<br>
+                    <strong>Description:</strong> {{exploit.description}}<br>
+                    <strong>Date Created:</strong> {{exploit.created_at}}<br>
+                    <strong>URL:</strong> <a href="{{exploit.html_url}}">{{exploit.html_url}}</a><br>
+                    <strong>Stars:</strong> {{exploit.stargazers_count}}
+                </p>
+                <hr>
+                {% endfor %}
+            {% if exploits_info_github['pocs']==[] %}
+                <p>No exploits found for this CVE on Github.</p>
+            {% endif %}
+            {% else %}
+                <p>No exploits found for this CVE on Github.</p>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade show" id="docker" role="tabpanel" aria-labelledby="docker-tab">
+            {% if docker_info %}
+            
+                {% for image in docker_info['results'] %}
+                <p>
+                    <strong>Image Name:</strong> {{image.repo_name}}<br>
+                    <strong>Author:</strong> {{image.repo_owner}}<br>
+                    <strong>Description:</strong> {{image.short_description}}<br>
+                    <strong>URL:</strong> <a href="https://hub.docker.com/r/{{image.repo_name}}">https://hub.docker.com/r/{{image.repo_name}}</a><br>
+                    <strong>Pull count:</strong> {{image.pull_count}}
+                </p>
+
+                <p id="dockerDeployStuff"><button onclick="deployImage('{{ image.repo_name }}')" class="btn btn-dark">Deploy {{ image.repo_name }}</button></p>
+                
+                <hr>
+                {% endfor %}
+            
+            {% if docker_info['results']==[] %}
+                <p>No docker images found for this CVE on Docker Hub.</p>
+            {% endif %}
+            {% else %}
+                <p>No docker images found for this CVE on Docker Hub.</p>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade show" id="vulhub" role="tabpanel" aria-labelledby="vulhub-tab">
+            {% if vulhub_info %}
+            <p>
+                <strong>Vulhub URL:</strong> <a href="{{vulhub_info.url}}">{{vulhub_info.url}}</a><br>
+            </p>
+            <p id="dockerVulhubStuff"><button onclick="deployImageVulhub('{{ cve_id }}')" class="btn btn-dark">Deploy Vulhub Image</button></p>
+            
+            
+    
+            {% else %}
+                <p>No Vulhub entry found for this CVE.</p>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade show" id="vm" role="tabpanel" aria-labelledby="vm-tab">
+            <div class="vm-control-buttons" id="attackerControl">
+                <h4>Attacker Machine Control</h4>
+                <button onclick="startAttacker()" class="btn btn-success">StartAttacker</button>
+                <button onclick="stopAttacker()" class="btn btn-danger">Stop Attacker</button>
+                <button onclick="showAttackerVNC()" class="btn btn-primary">Show Attacker VNC</button>
+                <button onclick="showAttacker()" class="btn btn-primary">Show Attacker SSH</button>
+            </div>
+
+            {% if status_attacker %}
+                <p class="{{ status_attacker[0] }}"><strong>Attacker Status:</strong> {{ status_attacker[0] }}</p>
+                {% if status_attacker[0] == "running" %}
+                    <p><strong>Running for:</strong> {{ (status_attacker[1] / 60)|round(2) }} minutes</p>
+                    <iframe src="http://{{ status_entry[1]}}/vnc.html" width="1100" height="800" frameborder="0"></iframe>
+                    
+                {% endif %}
+                
+            {% endif %}
+                
+
+            <div class="vm-control-buttons" id="dockerHostControl">
+                <h4>Docker Host Server Control (Docker Image Host)</h4>
+                <button onclick="startDockerHost()" class="btn btn-success">Start Docker Host</button>
+                <button onclick="stopDockerHost()" class="btn btn-danger">Stop Docker Host</button>
+                <button onclick="showDockerHost()" class="btn btn-primary">Show Docker Host SSH</button>
+            </div>
+
+            {% if status_docker_host %}
+                <p class="{{status_docker_host[0]}}"><strong>Docker Host Status: </strong> {{ status_docker_host[0] }}</p>
+                {% if status_docker_host[0] == "running" %}
+                    <p><strong>Running for:</strong> {{ (status_docker_host[1] / 60)|round(2) }} minutes</p>
+                {% endif %}
+                
+            {% endif %}
+
+
+            <h4>Docker Container Control</h4>
+                   
+            {% if status_docker['result'] == "running" %}
+                <div class="vm-control-buttons" id="dockerControl">
+                    <button onclick="showNetworkLogs()" class="btn btn-primary">Get Network Logs of Docker</button>
+                    <button onclick="stopDockerContainers()" class="btn btn-danger">Stop Docker Containers</button>
+                </div>
+                <p class="{{status_docker['result']}}"><strong>Docker Status: </strong> {{ status_docker['result'] }}</p>
+                <p><strong>IP: </strong> {{ status_docker['ip_result'] }}</p>
+                <p><strong>Open ports by Docker: </strong> {{ status_docker['ports'] }}</p>
+            {% else %}
+                <p class="not_running"><strong>Docker Status: </strong> not_running</p>
+            {% endif %}
+
+
+            <div class="vm-control-buttons">
+                <h5>NOTE If need to enter passwords it is:</h5>
+                <pre><code class="language-python">vagrant:vagrant</code></pre>
+            </div>
+        </div>
+      </div>
+
+
+      <div class="modal" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="loadingModalLabel">Reloading page...</h5>
+            </div>
+            <div class="modal-body">
+                <p>It should not take long...</p>
+              <div class="text-center">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="{{ url_for('static', filename='cve_template_script.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVEBox - CVE Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icon.ico') }}">
+</head>
+<body>
+
+    <div class="container">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        <div class="search-container">
+            <label for="searchInput">Enter CVE ID or search string:</label>
+            <input type="text" id="searchInput" placeholder="e.g., CVE-2022-1234, log4j" onkeydown="checkEnter(event)">
+            <button onclick="searchCVE()" class="btn btn-dark">Search</button>
+        </div>
+        
+        <h2>Search Results</h2>
+        <div id="resultContainer"></div>
+
+        <hr>
+
+
+        <div id="latestCveContainer">
+
+            <h2>Popular CVEs</h2>
+        {% if latest_cves %}
+        <table class="result-table table">
+            <thead>
+                <tr>
+                    <th>CVE ID</th>
+                    <th>Description</th>
+                    <th>CVSS Score</th>
+                    <th>Severity</th>
+                    <th>Technology</th>
+                    <th>Vendor</th>
+                    <th>EPSS Score</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            {% for cve in latest_cves %}
+            <tr>
+                <td>{{cve[0]}}</td>
+                <td>{{cve[1]}}</td>
+                <td>{{cve[2]}}</td>
+                <td>{{cve[3]}}</td>
+                <td>{{cve[4]}}</td>
+                <td>{{cve[5]}}</td>
+                <td>{{cve[6]}}</td>
+                <td><button class="btn btn-dark" onclick="selectCVE('{{cve[0]}}')" onkeydown="checkEnter(event)">Select</button></td>
+            </tr>
+            
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No latest CVEs found...</p>
+        {% endif %}
+
+
+        </div>
+        
+
+    </div>
+
+
+
+<div class="modal" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loadingModalLabel">Loading...</h5>
+        </div>
+        <div class="modal-body">
+            <p>This should not take long...</p>
+          <div class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="sr-only"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+    <script src="{{ url_for('static', filename='index_script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "hashicorp/bionic64"
+
+  #config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+  
+  config.vm.provider "vmware_desktop" do |vmware|
+    vmware.vmx["memsize"] = "2048"
+    vmware.vmx["numvcpus"] = "2"
+  end
+
+  config.vm.provision "file", source: "../../converter.py", destination: "/home/vagrant/converter.py"
+  config.vm.provision "file", source: "../../docker_compose_fixer.sh", destination: "/home/vagrant/docker_compose_fixer.sh"
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo apt-get update
+    sudo apt-get install -y docker.io python3.8 python3-pip docker-compose apache2 
+    sudo usermod -aG docker vagrant
+    sudo python3.8 -m pip install docker
+    sudo systemctl start apache2
+    sudo systemctl enable apache2
+    sudo chown -R vagrant:vagrant /var/www/html
+  SHELL
+end
